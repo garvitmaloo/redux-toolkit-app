@@ -1,3 +1,6 @@
+# See Demo
+Link to live app - https://redux-store-75338.web.app/
+
 # About this project
 1. A simple E-Commerce app made with Redux Toolkit and firebase as backend.
 2. You can add/remove items to/from cart and wishlist.
