@@ -1,23 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Routes, Route } from "react-router-dom";
+
+import Home from "./pages/Home";
+import { fetchStoreData } from "./store/storeSlice";
+
+const Cart = React.lazy(() => import("./pages/Cart"));
+const Wishlist = React.lazy(() => import("./pages/Wishlist"));
+const Confirmation = React.lazy(() => import("./pages/Confirmation"));
 
 function App() {
+  const dispatch = useDispatch();
+  const state = useSelector((state) => state);
+
+  useEffect(() => {
+    dispatch(fetchStoreData());
+  }, [dispatch]);
+
+  // Set the latest state in local storage every time state changes.
+  if (state.store.length !== 0) {
+    localStorage.setItem("appState", JSON.stringify(state));
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Suspense fallback={<h1 style={{ textAlign: "center" }}>Loading...</h1>}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/cart" element={<Cart />} />
+          <Route path="/wishlist" element={<Wishlist />} />
+          <Route path="/checkout" element={<Confirmation />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 }
